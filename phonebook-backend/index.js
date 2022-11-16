@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 app.use(express.json())
+var morgan = require('morgan')
+app.use(morgan('tiny'))
+
 
 let persons = [
     {
@@ -80,8 +83,6 @@ app.post('/api/persons', (request, response) => {
     response.json(person)
 
 }})
-
-
 
 const PORT = 3001
 app.listen(PORT, () => {

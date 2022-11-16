@@ -30,17 +30,21 @@ let date = new Date()
             
 
 app.get('/api/persons',(request,response)=>{
+    
     response.json(persons)
 })
 
+app.get('/api/persons/:id',(request,response)=>{
+    const id = Number(request.params.id)
+    const person = persons.find(person => person.id === id)
+    
+    response.json(person)
+})
 app.get('/info',(request,response)=>{
     let info = `Phonebook has info for ${persons.length} people`
     let date = new Date().toString()
             
-    response.end(`${info}\n${date}`)
-   
-    
-   
+    response.end(`${info}\n${date}`)   
 })
 
 const PORT = 3001

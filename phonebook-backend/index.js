@@ -1,6 +1,6 @@
-const { response } = require("express")
-const express = require("express")
+const express = require('express')
 const app = express()
+app.use(express.json())
 
 let persons = [
     {
@@ -25,10 +25,6 @@ let persons = [
     }
 ]
 
-let info = `Phonebook has info for ${persons.length} people`
-let date = new Date()
-
-
 app.get('/api/persons', (request, response) => {
 
     response.json(persons)
@@ -51,10 +47,30 @@ app.get('/info', (request, response) => {
     response.end(`${info}\n${date}`)
 })
 
-app.delete("/api/persons/:id",(request,response)=>{
+app.delete("/api/persons/:id", (request, response) => {
     const id = Number(request.params.id)
-    persons= persons.filter(person => person.id !== id)
+    persons = persons.filter(person => person.id !== id)
 })
+
+const generateId = () => {
+    const maxId = persons.length > 0
+        ? Math.max(...persons.map(person => person.id))
+        : 0
+    return maxId + 1
+}
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    const person = {
+        id: generateId(),
+        name: body.name,
+        number: body.number
+    }
+    persons = persons.concat(person)
+    response.json(person)
+})
+
+
 
 const PORT = 3001
 app.listen(PORT, () => {

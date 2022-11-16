@@ -1,5 +1,7 @@
+const { response } = require("express")
 const express = require("express")
 const app = express()
+
 let persons = [
     { 
       "id": 1,
@@ -23,11 +25,23 @@ let persons = [
     }
 ]
 
+let info = `Phonebook has info for ${persons.length} people`
+let date = new Date()
+            
 
 app.get('/api/persons',(request,response)=>{
     response.json(persons)
 })
 
+app.get('/info',(request,response)=>{
+    let info = `Phonebook has info for ${persons.length} people`
+    let date = new Date().toString()
+            
+    response.end(`${info}\n${date}`)
+   
+    
+   
+})
 
 const PORT = 3001
 app.listen(PORT,()=>{

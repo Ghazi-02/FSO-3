@@ -41,35 +41,31 @@ app.delete("/api/persons/:id", (request, response) => {
     persons = persons.filter(person => person.id !== id)
 })
 
-const generateId = () => {
-    const maxId = persons.length > 0
-        ? Math.max(...persons.map(person => person.id))
-        : 0
-    return maxId + 1
-}
+
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if (!body.name || !body.number) {
+    if (body.name === undefined || body.number === undefined) {
         return response.status(400).json({
             error: "name or number missing"
         })
-    } else if ((persons.map(person => person.name).includes(body.name)) === true) {
-        return response.status(400).json({
-            error: "name must be unique"
-        })
-    } else {
-        const person = {
-            id: generateId(),
+    // } else if ((person.map(person => person.name).includes(body.name)) === true) {
+    //     return response.status(400).json({
+    //         error: "name must be unique"
+    //     })
+    } 
+        const person = new Person ({
             name: body.name,
-            number: body.number
-        }
-        persons = persons.concat(person)
-        response.json(person)
+            number: body.number,
+            date: new Date()
+        })
+      
+        person.save().then(savedPerson => {
+            response.json(savedPerson)
+        })
 
-    }
-})
+    })
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
